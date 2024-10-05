@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Bangun Datar</title>
+    <style>
+body {
+  font-family: 'Roboto', sans-serif;
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(144,227,237,1) 35%, rgba(0,212,255,1) 100%);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: white;
+  padding: 40px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  max-width: 380px;
+  width: 100%;
+  transition: transform 0.3s ease;
+  position: relative; /* ubah dari absolute ke relative */
+  margin: 0 auto; /* tambahkan kode ini untuk membuat container berada di tengah layar */
+}
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #adb4b5;
+            font-size: 28px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        #hasil {
+            font-size: 18px;
+            color: #333;
+            margin-top: 20px;
+            text-align: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .output-item {
+            margin: 10px 0;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            margin-top: 12px;
+			margin-left: -15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+			border: 2px solid #0072ff;
+        }
+
+        .input-field:focus {
+            border-color: #0072ff;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 114, 255, 0.3);
+        }
+
+        .button {
+            background-color: #0072ff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #005bb5;
+        }
+
+        .input-section {
+            margin-top: 20px;
+        }
+
+        select {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+select option {
+  background-color: #f1f1f1;
+  color: #333;
+}
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Kalkulator Bangun Datar</h1>
+    <div id="namaUser"></div>
+    <div class="input-section">
+    <select id="bangunDatar">
+        <option value="" hidden>Pilih Bangun Datar</option>
+        <option value="persegi">Persegi</option>
+        <option value="segitiga">Segitiga</option>
+        <option value="lingkaran">Lingkaran</option>
+    </select>
+    <select id="jenisRumus">
+        <option value="" hidden>Pilih Jenis Rumus</option>
+        <option value="luas">Luas</option>
+        <option value="keliling">Keliling</option>
+    </select>
+</div>
+    <div id="inputFields"></div>
+    <button onclick="hitung()" class="button">Hitung</button>
+    <p id="hasil"></p>
+    
+</div>
+
+    <script>
+        // Prompt untuk nama pengguna
+        const nama = prompt("Masukkan nama Anda:");
+        document.getElementById("namaUser").innerHTML =`<div class="output-item"><strong>Nama:</strong> ${nama || 'Belum diisi'}</div>`;
+
+        // Event listener untuk perubahan pada select bangun datar
+        document.getElementById("bangunDatar").addEventListener("change", updateInputFields);
+        document.getElementById("jenisRumus").addEventListener("change", updateInputFields);
+
+        function updateInputFields() {
+            const bangunDatar = document.getElementById("bangunDatar").value;
+            const jenisRumus = document.getElementById("jenisRumus").value;
+            const inputFields = document.getElementById("inputFields");
+            inputFields.innerHTML = "";
+
+            if (bangunDatar && jenisRumus) {
+                switch(bangunDatar) {
+                    case "persegi":
+                        inputFields.innerHTML = '<input type="number" class="input-field" id="sisi" placeholder="Sisi">';
+                        break;
+                    case "persegiPanjang":
+                        inputFields.innerHTML = '<input type="number" class="input-field" id="panjang" placeholder="Panjang"><input type="number" id="lebar" placeholder="Lebar">';
+                        break;
+                    case "segitiga":
+                        if (jenisRumus === "luas") {
+                            inputFields.innerHTML = '<input type="number" class="input-field" id="alas" placeholder="Alas"><input type="number" class="input-field" id="tinggi" placeholder="Tinggi">';
+                        } else {
+                            inputFields.innerHTML = '<input type="number" class="input-field" id="sisi1" placeholder="Sisi 1"><input type="number" class="input-field" id="sisi2" placeholder="Sisi 2"><input type="number" class="input-field" id="sisi3" placeholder="Sisi 3">';
+                        }
+                        break;
+                    case "lingkaran":
+                        inputFields.innerHTML = '<input type="number" class="input-field" id="jariJari" placeholder="Jari-jari">';
+                        break;
+                }
+            }
+        }
+
+        function hitung() {
+            const bangunDatar = document.getElementById("bangunDatar").value;
+            const jenisRumus = document.getElementById("jenisRumus").value;
+            let hasil;
+
+            switch(bangunDatar) {
+                case "persegi":
+                    const sisi = parseFloat(document.getElementById("sisi").value);
+                    hasil = jenisRumus === "luas" ? sisi * sisi : 4 * sisi;
+                    break;
+                case "persegiPanjang":
+                    const panjang = parseFloat(document.getElementById("panjang").value);
+                    const lebar = parseFloat(document.getElementById("lebar").value);
+                    hasil = jenisRumus === "luas" ? panjang * lebar : 2 * (panjang + lebar);
+                    break;
+                case "segitiga":
+                    if (jenisRumus === "luas") {
+                        const alas = parseFloat(document.getElementById("alas").value);
+                        const tinggi = parseFloat(document.getElementById("tinggi").value);
+                        hasil = 0.5 * alas * tinggi;
+                    } else {
+                        const sisi1 = parseFloat(document.getElementById("sisi1").value);
+                        const sisi2 = parseFloat(document.getElementById("sisi2").value);
+                        const sisi3 = parseFloat(document.getElementById("sisi3").value);
+                        hasil = sisi1 + sisi2 + sisi3;
+                    }
+                    break;
+                case "lingkaran":
+                    const jariJari = parseFloat(document.getElementById("jariJari").value);
+                    hasil = jenisRumus === "luas" ? Math.PI * jariJari * jariJari : 2 * Math.PI * jariJari;
+                    break;
+            }
+
+            document.getElementById("hasil").textContent =` ${jenisRumus.charAt(0).toUpperCase() + jenisRumus.slice(1)} ${bangunDatar}: ${hasil.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
